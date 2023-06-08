@@ -19,4 +19,19 @@ export class UserController {
             return apiResponse.errorMessage(res, error);
         }
     }
+
+    // READ
+    public list (req: Request, res: Response) {
+        try{
+            if(!users){
+                return apiResponse.notFound(res, 'Users');
+            }
+
+            let result = users;
+
+            return apiResponse.success(res, 'Users', result);
+        }catch (error: any) {
+            return apiResponse.errorMessage(res, error);
+        }
+    }
 }

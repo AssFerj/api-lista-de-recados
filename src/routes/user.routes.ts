@@ -6,6 +6,7 @@ import { taskRoutes } from "./task.routes";
 export const userRoutes = ()=> {
     const app = Router();
 
+    app.get('/', new UserController().list);
     app.post('/', [userValidateFields], new UserController().create);
 
     app.use('/:userId/tasks', taskRoutes());
