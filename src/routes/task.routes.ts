@@ -1,14 +1,18 @@
 import { Router } from "express"
 import { TaskController } from "../controllers/tasks.controllers";
 import { taskValidateFields } from "../middlewares/taskValidateFields.middleware";
+import { taskValidateIdsParams } from "../middlewares/taskValidateIdsParams.middleware";
+import { userValidateUserIdParams } from "../middlewares/userValidateUserIdParams.middleware";
 
 export const taskRoutes = ()=> {
     const app = Router({
         mergeParams: true
     });
 
-    app.get('/', new TaskController().list);
-    app.post('/', [taskValidateFields], new TaskController().create);
+    app.get('/', [userValidateUserIdParams], new TaskController().list);
+    app.post('/', [userValidateUserIdParams, taskValidateFields], new TaskController().create);
+    app.put('/:taskId', [taskValidateIdsParams], new TaskController().updateTask);
+    app.delete('/:taskId', [taskValidateIdsParams], new TaskController().deleteTask);
 
     return app;
 }

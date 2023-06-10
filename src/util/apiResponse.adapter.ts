@@ -17,6 +17,22 @@ export class apiResponse{
         });
     }
 
+    public static successUpdate(res: Response, entity: string, data: any){
+        return res.status(200).send({
+            ok: true,
+            message: `${entity} successfully updated`,
+            data: data
+        });
+    }
+
+    public static successDelete(res: Response, entity: string, data: any){
+        return res.status(200).send({
+            ok: true,
+            message: `${entity} successfully deleted`,
+            data: data
+        });
+    }
+
     public static notFound(res: Response, entity: string){
         return res.status(404).send({
             ok: false,
