@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { apiResponse } from "../util/apiResponse.adapter";
 import { users } from "../dataBase/dataUsers";
 import { Task } from "../models/Task";
+import { log } from "console";
 
 export class TaskController {
     // CREATE
@@ -38,37 +39,19 @@ export class TaskController {
 
             const findUser = users.find(u => u.id === userId);
 
-            return apiResponse.success(res, 'Users', findUser?.task);
+            if(!findUser){
+                return apiResponse.notFound(res, 'User');
+            }
+
+            const findTask = findUser.task.map(task => task.toJson());
+
+            console.log(findTask);
+            return apiResponse.success(res, 'Tasks', findTask);
+            
         }catch (error: any) {
             return apiResponse.errorMessage(res, error);
         }
     }
-
-    // public getTask (req: Request, res: Response) {
-    //     try{
-    //         const { userId, taskId } = req.params;
-
-    //         if(!users){
-    //             return apiResponse.notFound(res, 'Users');
-    //         }
-
-    //         const findUser = users.find(u => u.id === userId);
-            
-    //         if(!findUser){
-    //             return apiResponse.notFound(res, 'User');
-    //         }
-
-    //         if(!findUser.task){
-    //             return apiResponse.notFound(res, 'Task');
-    //         }
-            
-    //         const findTask = findUser.task.find(t => t.id === taskId);
-
-    //         return apiResponse.success(res, 'Task', findTask?.toJson());
-    //     }catch (error: any) {
-    //         return apiResponse.errorMessage(res, error);
-    //     }
-    // }
 
     // UPDATE
     public updateTask (req: Request, res: Response) {
@@ -110,7 +93,7 @@ export class TaskController {
         }
     }
 
-    // DELETE - Ver com o techhelper
+    // DELETE
     public deleteTask (req: Request, res: Response) {
         try {
             const { userId, taskId } = req.params;
@@ -130,16 +113,16 @@ export class TaskController {
             }
             
             const findTask = findUser.task.findIndex(t => t.id === taskId);
-            console.log(findTask);
             
-
-            if(!findTask){
+            if(findTask < 0){
                 return apiResponse.notFound(res, 'Task');
             }
+            
+            const task = findUser.task[findTask];
 
-            const taskToDelete = findUser.task.splice(findTask, 1);
+            findUser.task.splice(findTask, 1);
 
-            return apiResponse.successDelete(res, 'Task', taskToDelete);
+            return apiResponse.successDelete(res, 'Task', task.toJson());
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }

@@ -33,6 +33,14 @@ export class apiResponse{
         });
     }
 
+    public static successLogin(res: Response, entity: string, data: any){
+        return res.status(200).send({
+            ok: true,
+            message: `Login successfully done`,
+            data: data
+        });
+    }
+
     public static notFound(res: Response, entity: string){
         return res.status(404).send({
             ok: false,
@@ -51,6 +59,13 @@ export class apiResponse{
         return res.status(400).send({
             ok: false,
             message:  `${entity} already exist!`,
+        });
+    }
+
+    public static ivalidCredentials(res: Response){
+        return res.status(401).send({
+            ok: false,
+            message:  `Invalid credentials!`,
         });
     }
 
