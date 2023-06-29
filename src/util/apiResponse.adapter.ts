@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { TaskArqchive } from "../models/Task";
 
 export class apiResponse{
     public static success(res: Response, entity: string, data: any){
@@ -38,6 +39,13 @@ export class apiResponse{
             ok: true,
             message: `Login successfully done`,
             data: data
+        });
+    }
+
+    public static typeNotAssigned(res: Response, entity: string){
+        return res.status(404).send({
+            ok: false,
+            message:  `${entity} not found, ${entity} only ${TaskArqchive.archived} or ${TaskArqchive.unarchived}`,
         });
     }
 

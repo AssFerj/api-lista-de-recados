@@ -2,16 +2,15 @@ import { Request, Response } from "express";
 import { apiResponse } from "../util/apiResponse.adapter";
 import { users } from "../dataBase/dataUsers";
 import { Task } from "../models/Task";
-import { log } from "console";
 
 export class TaskController {
     // CREATE
     public create(req: Request, res: Response) {
         try {
             const { userId } = req.params;
-            const { description } = req.body;
+            const { description, type } = req.body;
 
-            const task = new Task(description, userId);
+            const task = new Task(description, userId, type);
 
             const findUser = users.find(u => u.id === userId);
 
@@ -29,27 +28,36 @@ export class TaskController {
     }
 
     // READ
-    public list (req: Request, res: Response) {
-        try{
-            const { userId } = req.params;
+    public list(req: Request, res: Response) {
+        try {
+          const { userId } = req.params;
+          const { type } = req.query;
+      
+          if (!users) {
+            return apiResponse.notFound(res, 'Users');
+          }
+      
+          const findUser = users.find(u => u.id === userId);
+      
+          if (!findUser) {
+            return apiResponse.notFound(res, 'User');
+          }
+      
+          let tasks: Task[] = findUser.task;
+          console.log(tasks);
+          
+      
+          if (type && (type === 'true' || type === 'false')) {
+            const filteredTasks = tasks.filter(task => task.type === Boolean(type));
+            tasks = filteredTasks;
+          }
 
-            if(!users){
-                return apiResponse.notFound(res, 'Users');
-            }
-
-            const findUser = users.find(u => u.id === userId);
-
-            if(!findUser){
-                return apiResponse.notFound(res, 'User');
-            }
-
-            const findTask = findUser.task.map(task => task.toJson());
-
-            console.log(findTask);
-            return apiResponse.success(res, 'Tasks', findTask);
-            
-        }catch (error: any) {
-            return apiResponse.errorMessage(res, error);
+          const taskType = tasks.map(task => task.toJson());
+      
+          return apiResponse.success(res, 'Tasks', taskType);
+      
+        } catch (error: any) {
+          return apiResponse.errorMessage(res, error);
         }
     }
 
@@ -87,7 +95,7 @@ export class TaskController {
                 findTask.description = description;
             }
 
-            return apiResponse.successUpdate(res, 'Description', description);
+            return apiResponse.successUpdate(res, 'Description', findUser.task.map(task => task.toJson()));
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }
@@ -122,7 +130,7 @@ export class TaskController {
 
             findUser.task.splice(findTask, 1);
 
-            return apiResponse.successDelete(res, 'Task', task.toJson());
+            return apiResponse.successDelete(res, 'Task', findUser.task.map(task => task.toJson()));
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }
