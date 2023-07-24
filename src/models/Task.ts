@@ -1,4 +1,5 @@
 import { v4 as createUuid } from "uuid";
+import { User } from "./User";
 
 // export interface TaskArqchive {
 //     archived: boolean,
@@ -6,6 +7,7 @@ import { v4 as createUuid } from "uuid";
 
 export class Task {
     private _id: string;
+    detail: string;
 
     constructor(private _description: string, private _userId: string, private _type: boolean) {
         this._id = createUuid();
@@ -35,6 +37,17 @@ export class Task {
             description: this._description,
             type: this._type
         }
+    }
+
+    public static create(entity: any) {
+        const task = new Task(
+            entity.description,
+            entity.userId,
+            entity.type,
+        )
+        task._id = entity.id;
+
+        return task;
     }
 
     public set userId(newUserId: string){

@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import {User} from "../models/User";
 import { apiResponse } from "../util/apiResponse.adapter";
 import { users } from "../dataBase/dataUsers";
+import { UserRepository } from "../repositories/user.repository";
 
 export class UserController {
     // CREATE
-    public create(req: Request, res: Response) {
+    public async create(req: Request, res: Response) {
         try {
             const { firstName, lastName, email, password } = req.body;
 
@@ -21,14 +22,13 @@ export class UserController {
     }
 
     // READ
-    public list (req: Request, res: Response) {
+    public async list (req: Request, res: Response) {
         try{
             if(!users){
                 return apiResponse.notFound(res, 'Users');
             }
 
             let result = users;
-            // const result = users.map(user => user.toJson());
 
             return apiResponse.success(res, 'Users', result);
         }catch (error: any) {
@@ -37,7 +37,7 @@ export class UserController {
     }
 
     // LOGIN
-    public login(req: Request, res: Response) {
+    public async login(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
 
@@ -49,7 +49,7 @@ export class UserController {
                 return apiResponse.notProvided(res, 'Password');
             }
 
-            const findUser = users.find((user) => user.email === email);
+            const findUser = await new UserRepository.getByEmail(email);
 
             if(!findUser){
                 return apiResponse.ivalidCredentials(res);

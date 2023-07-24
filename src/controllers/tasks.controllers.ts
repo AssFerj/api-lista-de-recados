@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { apiResponse } from "../util/apiResponse.adapter";
 import { users } from "../dataBase/dataUsers";
 import { Task } from "../models/Task";
+import { UserRepository } from "../repositories/user.repository";
 
 export class TaskController {
     // CREATE
@@ -12,7 +13,7 @@ export class TaskController {
 
             const task = new Task(description, userId, type);
 
-            const findUser = users.find(u => u.id === userId);
+            const findUser = new UserRepository.getById(userId);
 
             if(!findUser){
                 return apiResponse.notFound(res, 'User');
@@ -37,7 +38,7 @@ export class TaskController {
             return apiResponse.notFound(res, 'Users');
           }
       
-          const findUser = users.find(u => u.id === userId);
+          const findUser = new UserRepository.getById(userId);
       
           if (!findUser) {
             return apiResponse.notFound(res, 'User');
@@ -75,7 +76,7 @@ export class TaskController {
                 return apiResponse.notFound(res, 'Users');
             }
 
-            const findUser = users.find(u => u.id === userId);
+            const findUser = new UserRepository.getById(userId);
             
             if(!findUser){
                 return apiResponse.notFound(res, 'User');
@@ -110,7 +111,7 @@ export class TaskController {
                 return apiResponse.notFound(res, 'Users');
             }
 
-            const findUser = users.find(u => u.id === userId);
+            const findUser = new UserRepository.getById(userId);
             
             if(!findUser){
                 return apiResponse.notFound(res, 'User');

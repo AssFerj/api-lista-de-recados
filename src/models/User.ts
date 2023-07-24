@@ -44,6 +44,18 @@ export class User{
         };
     }
 
+    public static create(entity: any){
+        const user = new User(
+            entity.firstName,
+            entity.lastName,
+            entity.email,
+            entity.password
+        );
+        user._id = entity.id;
+
+        return user;
+    }
+
     public set firstName(newFirstName: string) {
         this._firstName = newFirstName;
     }
