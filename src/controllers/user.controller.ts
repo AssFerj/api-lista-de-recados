@@ -58,7 +58,34 @@ export class UserController {
             //     return apiResponse.ivalidCredentials(res);
             // }
 
-            return apiResponse.successCreate(res, 'User', findUser);
+            return apiResponse.successLogin(res, 'User', findUser);
+            
+        } catch (error) {
+            return apiResponse.errorMessage(res, error);
+        }
+    }
+
+    // USER BY ID
+    public async gerUserById(req: Request, res: Response) {
+        try {
+            const { id } = req.body;
+
+            if(!id){
+                return apiResponse.notProvided(res, 'ID');
+            }
+
+            const repository = new UserRepository();
+            const findUser = await repository.getById(id);
+
+            if(!findUser){
+                return apiResponse.ivalidCredentials(res);
+            }
+
+            // if(findUser.password !== password){
+            //     return apiResponse.ivalidCredentials(res);
+            // }
+
+            return apiResponse.success(res, 'User', findUser);
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);

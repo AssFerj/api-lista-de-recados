@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity({name: 'tasks'})
 export class TaskEntity {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()

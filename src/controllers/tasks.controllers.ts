@@ -1,25 +1,25 @@
 import { Request, Response } from "express";
 import { apiResponse } from "../util/apiResponse.adapter";
-import { users } from "../dataBase/dataUsers";
 import { Task } from "../models/Task";
 import { UserRepository } from "../repositories/user.repository";
+import { TaskRepository } from "../repositories/task.repository";
 
 export class TaskController {
     // CREATE
-    public create(req: Request, res: Response) {
+    public async create(req: Request, res: Response) {
         try {
             const { userId } = req.params;
             const { description, type } = req.body;
 
-            const task = new Task(description, userId, type);
-
-            const findUser = new UserRepository.getById(userId);
-
-            if(!findUser){
+            const user = await new UserRepository().getById(userId);
+            
+            if(!user){
                 return apiResponse.notFound(res, 'User');
             }
 
-            findUser.task.push(task);
+            const task = new Task(description, userId, type, user);
+
+            await new TaskRepository().addTask(task);
 
             return apiResponse.successCreate(res, 'Task', task.toJson());
             
@@ -29,41 +29,30 @@ export class TaskController {
     }
 
     // READ
-    public list(req: Request, res: Response) {
+    public async list(req: Request, res: Response) {
         try {
-          const { userId } = req.params;
-          const { type } = req.query;
-      
-          if (!users) {
-            return apiResponse.notFound(res, 'Users');
-          }
-      
-          const findUser = new UserRepository.getById(userId);
-      
-          if (!findUser) {
-            return apiResponse.notFound(res, 'User');
-          }
-      
-          let tasks: Task[] = findUser.task;
-          console.log(tasks);
-          
-      
-          if (type && (type === 'true' || type === 'false')) {
-            const filteredTasks = tasks.filter(task => task.type === Boolean(type));
-            tasks = filteredTasks;
-          }
+            const { userId } = req.params;
+            const { type } = req.query;
+            const typeConvert = Boolean(type === 'true' ? true : false);
 
-          const taskType = tasks.map(task => task.toJson());
+            let tasks = await new TaskRepository().listTasks(userId, typeConvert);
       
-          return apiResponse.success(res, 'Tasks', taskType);
-      
-        } catch (error: any) {
-          return apiResponse.errorMessage(res, error);
-        }
+            if (type) {
+                const filteredTasks = tasks.filter(task => task.type === typeConvert);
+                tasks = filteredTasks;
+            }
+
+            const taskType = tasks.map(task => task.toJson());
+        
+            return apiResponse.success(res, 'Tasks', taskType);
+        
+            } catch (error: any) {
+            return apiResponse.errorMessage(res, error);
+            }
     }
 
     // UPDATE
-    public updateTask (req: Request, res: Response) {
+    public async updateTask (req: Request, res: Response) {
         try {
             const { userId, taskId } = req.params;
             const { description } = req.body;
@@ -71,67 +60,32 @@ export class TaskController {
             if(!description){
                 return apiResponse.notProvided(res, 'Description');
             }
+                            
+            const task = await new TaskRepository().getTaskById(userId, taskId);
 
-            if(!users){
-                return apiResponse.notFound(res, 'Users');
-            }
-
-            const findUser = new UserRepository.getById(userId);
-            
-            if(!findUser){
-                return apiResponse.notFound(res, 'User');
-            }
-
-            if(!findUser.task){
+            if(!task){
                 return apiResponse.notFound(res, 'Task');
             }
-            
-            const findTask = findUser.task.find(t => t.id === taskId);
 
-            if(!findTask?.description){
-                return apiResponse.notFound(res, 'Description');
-            }
-            
-            if(description){
-                findTask.description = description;
+            if(description) {
+                task.description = description;
             }
 
-            return apiResponse.successUpdate(res, 'Description', findUser.task.map(task => task.toJson()));
+            await new TaskRepository().updateTask(task);
+
+            return apiResponse.successUpdate(res, 'Description', task.toJson());
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }
     }
 
     // DELETE
-    public deleteTask (req: Request, res: Response) {
+    public async deleteTask (req: Request, res: Response) {
         try {
-            const { userId, taskId } = req.params;
+            const { taskId } = req.params;
+            const deletedTask = await new TaskRepository().deleteTask(taskId);
 
-            if(!users){
-                return apiResponse.notFound(res, 'Users');
-            }
-
-            const findUser = new UserRepository.getById(userId);
-            
-            if(!findUser){
-                return apiResponse.notFound(res, 'User');
-            }
-
-            if(!findUser.task){
-                return apiResponse.notFound(res, 'Task');
-            }
-            
-            const findTask = findUser.task.findIndex(t => t.id === taskId);
-            
-            if(findTask < 0){
-                return apiResponse.notFound(res, 'Task');
-            }
-            
-            const task = findUser.task[findTask];
-
-            findUser.task.splice(findTask, 1);
-
-            return apiResponse.successDelete(res, 'Task', findUser.task.map(task => task.toJson()));
+            return apiResponse.successDelete(res, 'Task', deletedTask);
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }

@@ -7,9 +7,8 @@ import { User } from "./User";
 
 export class Task {
     private _id: string;
-    detail: string;
 
-    constructor(private _description: string, private _userId: string, private _type: boolean) {
+    constructor(private _description: string, private _userId: string, private _type: boolean, private _user: User) {
         this._id = createUuid();
         this._type = false;
     }
@@ -44,6 +43,7 @@ export class Task {
             entity.description,
             entity.userId,
             entity.type,
+            entity.user
         )
         task._id = entity.id;
 

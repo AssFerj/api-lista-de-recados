@@ -1,22 +1,64 @@
 import { Database } from "../dataBase/config/database.connection";
-import { users } from "../dataBase/dataUsers";
 import { UserEntity } from "../dataBase/entity/user.entity";
+import { User } from "../models/User";
 
 export class UserRepository {
-  private connection = Database.connection;
   private repository = Database.connection.getRepository(UserEntity);
 
+  public async listUsers() {
+    const result = await this.repository.find();
+    return result.map((entity) => UserRepository.mapRowToModel(entity));    
+  }
 
-    static getByEmail: any;
-  public async getById(id: string) {
-    return users.find((user) => user.id === id);
+  public async createUser(user: User) {
+    const userEntity = this.repository.create({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email
+    });
+
+    await this.repository.save(userEntity);
+  }
+
+  public async login(logedUser: User) {
+    const result = await this.repository.findOne({
+      where: {
+        email: logedUser.email,
+        password: logedUser.password,
+      },
+    });
+
+    if (!result) {
+      return undefined;
+    }
+
+    return UserRepository.mapRowToModel(result);
   }
 
   public async getByEmail(email: string) {
-    return users.find((user) => user.email === email);
+    const result = await this.repository.findOneBy({
+      email
+    })
+    return !!result;
   }
 
-  public async findIndex(id: string) {
-    return users.findIndex((user) => user.id === id);
+  public async getById(id: string) {
+    const result = await this.repository.findOne({
+      where: {
+        id: id
+      }
+    })
+
+    if(!result) {
+      return undefined;
+    }
+    console.log(result);
+    
+
+    return UserRepository.mapRowToModel(result);
+  }
+
+  public static mapRowToModel(row: UserEntity) {
+    return User.create(row);
   }
 }

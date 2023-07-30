@@ -3,7 +3,7 @@ import { Task } from "./Task";
 
 export class User{
     private _id: string;
-    private _tasks: Task[];
+    // private _tasks: Task[];
 
     constructor(
         private _firstName: string, 
@@ -12,7 +12,7 @@ export class User{
         private _password: string
     ){
         this._id = createUuid();
-        this._tasks = []
+        // this._tasks = []
     }
 
     public get id(): string {
@@ -35,9 +35,9 @@ export class User{
         return this._password;
     }
 
-    public get task(): Task[] {
-        return this._tasks;
-    }
+    // public get task(): Task[] {
+    //     return this._tasks;
+    // }
 
     public toJson() {
         return {
@@ -77,7 +77,7 @@ export class User{
         this._password = newPassword;
     }
 
-    public set addTask(newTask: Task) {
-        this._tasks.push(newTask);
-    }
+    // public set addTask(newTask: Task) {
+    //     this._tasks.push(newTask);
+    // }
 }
