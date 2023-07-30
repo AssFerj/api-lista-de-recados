@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import {User} from "../models/User";
 import { apiResponse } from "../util/apiResponse.adapter";
-import { users } from "../dataBase/dataUsers";
 import { UserRepository } from "../repositories/user.repository";
 
 export class UserController {
@@ -12,7 +11,9 @@ export class UserController {
 
             const user = new User(firstName, lastName, email, password);
 
-            users.push(user);
+            const repository = new UserRepository();
+
+            await repository.createUser(user);
 
             return apiResponse.successCreate(res, 'User', user.toJson())
             
@@ -24,11 +25,8 @@ export class UserController {
     // READ
     public async list (req: Request, res: Response) {
         try{
-            if(!users){
-                return apiResponse.notFound(res, 'Users');
-            }
-
-            let result = users;
+            const repository = new UserRepository();
+            const result = await repository.listUsers();
 
             return apiResponse.success(res, 'Users', result);
         }catch (error: any) {
@@ -49,17 +47,18 @@ export class UserController {
                 return apiResponse.notProvided(res, 'Password');
             }
 
-            const findUser = await new UserRepository.getByEmail(email);
+            const repository = new UserRepository();
+            const findUser = await repository.getByEmail;
 
             if(!findUser){
                 return apiResponse.ivalidCredentials(res);
             }
 
-            if(findUser.password !== password){
-                return apiResponse.ivalidCredentials(res);
-            }
+            // if(findUser.password !== password){
+            //     return apiResponse.ivalidCredentials(res);
+            // }
 
-            return apiResponse.successCreate(res, 'User', findUser.toJson());
+            return apiResponse.successCreate(res, 'User', findUser);
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);
