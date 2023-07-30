@@ -7,25 +7,25 @@ export class UserEntity {
 
     @Column({
         type: 'varchar',
-        length: 100
+        length: 50
     })
     firstName: string;
 
     @Column({
         type: 'varchar',
-        length: 100
+        length: 50
     })
     lastName: string;
 
     @Column({
         type: 'varchar',
-        length: 100
+        length: 50
     })
     email: string;
     
     @Column({
         type: 'varchar',
-        length: 100
+        length: 50
     })
     password: string;
 
