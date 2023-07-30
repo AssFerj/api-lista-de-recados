@@ -9,6 +9,7 @@ export const userRoutes = ()=> {
     app.get('/', new UserController().list);
     app.post('/', [userValidateFields], new UserController().create);
     app.post('/login', new UserController().login);
+    app.get('/:id', new UserController().gerUserById);
 
     app.use('/:userId/tasks', taskRoutes());
 

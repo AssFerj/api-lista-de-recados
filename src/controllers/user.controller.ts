@@ -68,7 +68,7 @@ export class UserController {
     // USER BY ID
     public async gerUserById(req: Request, res: Response) {
         try {
-            const { id } = req.body;
+            const { id } = req.params;
 
             if(!id){
                 return apiResponse.notProvided(res, 'ID');
