@@ -5,7 +5,12 @@ export class User{
     private _id: string;
     private _tasks: Task[];
 
-    constructor(private _firstName: string, private _lastName: string, private _email: string, private _password: string){
+    constructor(
+        private _firstName: string, 
+        private _lastName: string, 
+        private _email: string, 
+        private _password: string
+    ){
         this._id = createUuid();
         this._tasks = []
     }
