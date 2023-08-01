@@ -2,11 +2,19 @@ import { Database } from "../dataBase/config/database.connection";
 import { UserEntity } from "../dataBase/entity/user.entity";
 import { User } from "../models/User";
 
+interface LoggedUser {
+  email: string;
+  password: string;
+}
 export class UserRepository {
   private repository = Database.connection.getRepository(UserEntity);
 
   public async listUsers() {
-    const result = await this.repository.find();
+    const result = await this.repository.find({
+      select: {
+        password: false
+      }
+    });
     return result.map((entity) => UserRepository.mapRowToModel(entity));    
   }
 
@@ -14,7 +22,8 @@ export class UserRepository {
     const userEntity = this.repository.create({
       firstName: user.firstName,
       lastName: user.lastName,
-      email: user.email
+      email: user.email,
+      password: user.password
     });
 
     await this.repository.save(userEntity);
@@ -31,7 +40,10 @@ export class UserRepository {
     if (!result) {
       return undefined;
     }
-
+    // console.log(result);
+    // console.log(UserRepository.mapRowToModel(result));
+    
+    
     return UserRepository.mapRowToModel(result);
   }
 

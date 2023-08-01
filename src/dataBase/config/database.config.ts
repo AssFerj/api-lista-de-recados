@@ -18,6 +18,7 @@ const dataSource = new DataSource({
     synchronize: false,
     schema: 'lista_recados',
     entities: [UserEntity, TaskEntity],
+    migrations: ['src/database/migrations/**/*.ts'],
 })
 
 export default dataSource;

@@ -1,11 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm"
+import { UserEntity } from "./user.entity";
 
 @Entity({name: 'tasks'})
 export class TaskEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({
+        name: 'user_id'
+    })
     userId: string;
 
     @Column()
@@ -14,4 +17,17 @@ export class TaskEntity {
     @Column()
     archived: boolean;
 
+    @CreateDateColumn({
+        name: 'created_at'
+    })
+    createdAt: Date;
+
+    @UpdateDateColumn({
+        name: 'updated_at'
+    })
+    updatedAt: Date;
+
+    @ManyToOne(() => UserEntity)
+    @JoinColumn({name: 'id'})
+    user: UserEntity
 }

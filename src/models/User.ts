@@ -45,7 +45,7 @@ export class User{
             firstName: this._firstName,
             lastName: this._lastName,
             email: this._email,
-            password: this._password
+            // password: this._password
         };
     }
 

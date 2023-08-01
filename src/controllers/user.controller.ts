@@ -48,17 +48,20 @@ export class UserController {
             }
 
             const repository = new UserRepository();
-            const findUser = await repository.getByEmail;
 
-            if(!findUser){
+            const loggedUser = new User('', '', email, password);
+
+            if(!loggedUser){
                 return apiResponse.ivalidCredentials(res);
             }
 
+            const result = await repository.login(loggedUser)
             // if(findUser.password !== password){
             //     return apiResponse.ivalidCredentials(res);
             // }
-
-            return apiResponse.successLogin(res, 'User', findUser);
+            // console.log(findUser);
+            
+            return apiResponse.successLogin(res, 'User', loggedUser.toJson());
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);
