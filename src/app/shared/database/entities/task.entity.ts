@@ -1,7 +1,16 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { 
+    Column, 
+    CreateDateColumn, 
+    Entity, 
+    JoinColumn, 
+    ManyToOne, 
+    PrimaryColumn, 
+    UpdateDateColumn 
+} from "typeorm";
+import { UserEntity } from "./user.entity";
 
 @Entity('tasks')
-export class UserEntity {
+export class TaskEntity {
     @PrimaryColumn({
         type: 'uuid'
     })

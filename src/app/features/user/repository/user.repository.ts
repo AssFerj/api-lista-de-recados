@@ -1,6 +1,6 @@
-import { Database } from "../dataBase/config/database.connection";
-import { UserEntity } from "../dataBase/entity/user.entity";
-import { User } from "../models/User";
+import { Database } from '../../../../main/database/database.connection'
+import { User } from "../../../../app/models/User";
+import { UserEntity } from '../../../shared/database/entities/user.entity'
 
 interface LoggedUser {
   email: string;

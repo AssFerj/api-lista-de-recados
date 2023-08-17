@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
-import { userValidateFields } from "../middlewares/userValidateFields.middleware";
-import { taskRoutes } from "./task.routes";
+import { userValidateFields } from "../../../../middlewares/userValidateFields.middleware";
+import { taskRoutes } from "../../task/routes/task.routes";
 
 export const userRoutes = ()=> {
     const app = Router();

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { apiResponse } from "../util/apiResponse.adapter";
-import { Task } from "../models/Task";
+import { Task } from "../-models/Task";
 import { UserRepository } from "../repositories/user.repository";
 import { TaskRepository } from "../repositories/task.repository";
 

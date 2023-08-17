@@ -1,10 +1,6 @@
 import { v4 as createUuid } from "uuid";
 import { User } from "./User";
 
-// export interface TaskArqchive {
-//     archived: boolean,
-// }
-
 export class Task {
     private _id: string;
 

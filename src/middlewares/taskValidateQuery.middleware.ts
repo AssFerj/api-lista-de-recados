@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { TaskArqchive } from "../models/Task";
+import { TaskArqchive } from "../-models/Task";
 import { apiResponse } from "../util/apiResponse.adapter";
 
 export const taskValidateQueryParams = (req: Request, res: Response, next: NextFunction) => {

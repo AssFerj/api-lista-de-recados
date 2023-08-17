@@ -1,5 +1,4 @@
 import { v4 as createUuid } from "uuid";
-import { Task } from "./Task";
 
 export class User{
     private _id: string;
