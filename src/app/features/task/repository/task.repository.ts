@@ -1,7 +1,7 @@
 import { Database } from "../../../../main/database/database.connection";
+import { Task } from "../../../models/Task";
 import { TaskEntity } from "../../../shared/database/entities/task.entity";
-import { Task } from "../../../../-models/Task";
-import { User } from "../../../../-models/User";
+
 
 export class TaskRepository {
   private repository = Database.connection.getRepository(TaskEntity);
