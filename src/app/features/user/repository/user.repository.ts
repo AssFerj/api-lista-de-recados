@@ -10,11 +10,7 @@ export class UserRepository {
   private repository = Database.connection.getRepository(UserEntity);
 
   public async listUsers() {
-    const result = await this.repository.find({
-      select: {
-        password: false
-      }
-    });
+    const result = await this.repository.find();    
     return result.map((entity) => UserRepository.mapRowToModel(entity));    
   }
 
@@ -47,13 +43,6 @@ export class UserRepository {
     return UserRepository.mapRowToModel(result);
   }
 
-  public async getByEmail(email: string) {
-    const result = await this.repository.findOneBy({
-      email
-    })
-    return !!result;
-  }
-
   public async getById(id: string) {
     const result = await this.repository.findOne({
       where: {
@@ -64,8 +53,6 @@ export class UserRepository {
     if(!result) {
       return undefined;
     }
-    console.log(result);
-    
 
     return UserRepository.mapRowToModel(result);
   }

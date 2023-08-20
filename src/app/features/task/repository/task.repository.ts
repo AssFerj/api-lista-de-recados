@@ -24,11 +24,13 @@ export class TaskRepository {
       return result.map((entity) => TaskRepository.mapRowToModel(entity));    
     }
   
-    public async getTaskById(userId: string, taskId: string) {
+    public async getTaskById(taskId: string) {
       const result = await this.repository.findOne({
         where: {
           id: taskId,
-          userId: userId,
+        },
+        relations: {
+          user: true
         }
       })
   
@@ -43,7 +45,8 @@ export class TaskRepository {
       this.repository.update({
         id: task.id
       },{
-        description: task.description
+        description: task.description,
+        archived: task.type
       })
     }
   
