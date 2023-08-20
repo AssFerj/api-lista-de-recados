@@ -5,7 +5,7 @@ export const userValidateUserIdParams = (req: Request, res: Response, next: Next
     const { userId } = req.params;
 
     if(!userId){
-        return apiResponse.notProvided(res, 'User ID');
+        return apiResponse.notProvided(res, 'ID');
     }
 
     next();

@@ -73,10 +73,6 @@ export class UserController {
         try {
             const { id } = req.params;
 
-            if(!id){
-                return apiResponse.notProvided(res, 'ID');
-            }
-
             const usecase = new GetUserByIdUsecase();
             const findUser = await usecase.execute(id);
 
