@@ -8,9 +8,9 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typeorm": "typeorm-ts-node-commonjs",
-    "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/database/config/database.config.ts",
-    "typeorm:run": "npm run typeorm migration:run -- -d ./src/database/config/database.config.ts",
-    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/database/config/database.config.ts"
+    "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/main/config/database.config.ts",
+    "typeorm:run": "npm run typeorm migration:run -- -d ./src/main/config/database.config.ts",
+    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/main/config/database.config.ts"
   },
   "keywords": [],
   "author": "",
