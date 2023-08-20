@@ -10,10 +10,11 @@ export const taskRoutes = ()=> {
         mergeParams: true
     });
 
-    app.get('/', [userValidateUserIdParams, taskValidateQueryParams], new TaskController().list);
-    app.post('/', [userValidateUserIdParams, taskValidateFields], new TaskController().create);
-    app.put('/:taskId', [taskValidateIdsParams], new TaskController().updateTask);
-    app.delete('/:taskId', [taskValidateIdsParams], new TaskController().deleteTask);
+    app.get('/', [/*userValidateUserIdParams, taskValidateQueryParams*/], new TaskController().list);
+    app.get('/:taskId', [/*userValidateUserIdParams, taskValidateQueryParams*/], new TaskController().getTaskById);
+    app.post('/', [/*userValidateUserIdParams, taskValidateFields*/], new TaskController().create);
+    app.put('/:taskId', [/*taskValidateIdsParams*/], new TaskController().updateTask);
+    app.delete('/:taskId', [/*taskValidateIdsParams*/], new TaskController().deleteTask);
 
     return app;
 }
