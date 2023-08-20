@@ -2,18 +2,21 @@ import { Request, Response } from "express";
 import { User } from '../../../models/User';
 import { apiResponse } from '../../../shared/util/apiResponse.adapter';
 import { UserRepository } from '../repository/user.repository';
+import { ListUsersUsecase } from "../usecases/list-user.usecase";
+import { CreateUserUsecase } from "../usecases/create-user.usecase";
+import { GetUserByIdUsecase } from "../usecases/get-user-by-id.usecase";
 
 export class UserController {
     // CREATE
     public async create(req: Request, res: Response) {
-        try {
+        try {         
             const { firstName, lastName, email, password } = req.body;
 
             const user = new User(firstName, lastName, email, password);
 
-            const repository = new UserRepository();
+            const usecase = new CreateUserUsecase();
 
-            await repository.createUser(user);
+            await usecase.execute(user);
 
             return apiResponse.successCreate(res, 'User', user.toJson())
             
@@ -25,8 +28,8 @@ export class UserController {
     // READ
     public async list (req: Request, res: Response) {
         try{
-            const repository = new UserRepository();
-            const result = await repository.listUsers();
+            const usecase = new ListUsersUsecase();
+            const result = await usecase.execute();
 
             return apiResponse.success(res, 'Users', result);
         }catch (error: any) {
@@ -37,6 +40,7 @@ export class UserController {
     // LOGIN
     public async login(req: Request, res: Response) {
         try {
+            console.log("login controller");
             const { email, password } = req.body;
 
             if(!email){
@@ -56,10 +60,6 @@ export class UserController {
             }
 
             const result = await repository.login(loggedUser)
-            // if(findUser.password !== password){
-            //     return apiResponse.ivalidCredentials(res);
-            // }
-            // console.log(findUser);
             
             return apiResponse.successLogin(res, 'User', loggedUser.toJson());
             
@@ -77,8 +77,8 @@ export class UserController {
                 return apiResponse.notProvided(res, 'ID');
             }
 
-            const repository = new UserRepository();
-            const findUser = await repository.getById(id);
+            const usecase = new GetUserByIdUsecase();
+            const findUser = await usecase.execute(id);
 
             if(!findUser){
                 return apiResponse.ivalidCredentials(res);

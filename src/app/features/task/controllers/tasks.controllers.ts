@@ -3,6 +3,9 @@ import { apiResponse } from "../../../shared/util/apiResponse.adapter";
 import { Task } from "../../../models/Task";
 import { UserRepository } from "../../user/repository/user.repository";
 import { TaskRepository } from "../../task/repository/task.repository";
+import { GetTaskByIdUsecase } from "../usecases/get-task-by-id.usecase";
+import { UpdateTaskUsecase } from "../usecases/update-task.usecase";
+import { ListTasksUsecase } from "../usecases/list-tasks.usecase";
 
 export class TaskController {
     // CREATE
@@ -33,47 +36,45 @@ export class TaskController {
         try {
             const { userId } = req.params;
             const { type } = req.query;
-            const typeConvert = Boolean(type === 'true' ? true : false);
+            const usecase = new ListTasksUsecase();
+            
 
-            let tasks = await new TaskRepository().listTasks(userId, typeConvert);
-      
-            if (type) {
-                const filteredTasks = tasks.filter(task => task.type === typeConvert);
-                tasks = filteredTasks;
-            }
-
-            const taskType = tasks.map(task => task.toJson());
+            let tasks = await usecase.execute(userId, type as string);
         
-            return apiResponse.success(res, 'Tasks', taskType);
+            return apiResponse.success(res, 'Tasks', tasks);
         
             } catch (error: any) {
             return apiResponse.errorMessage(res, error);
             }
     }
 
+    public async getTaskById(req: Request, res: Response) {
+        try {
+            const { taskId } = req.params;
+            const usecase = new GetTaskByIdUsecase();
+            const result = await usecase.execute(taskId);          
+
+            return apiResponse.success(res, 'Task', result);
+        } catch (error: any) {
+            return apiResponse.errorMessage(res, error);
+        }
+    }
+
     // UPDATE
     public async updateTask (req: Request, res: Response) {
         try {
+            const usecase = new UpdateTaskUsecase();
+            
             const { userId, taskId } = req.params;
-            const { description } = req.body;
+            const { description, type } = req.body;
 
             if(!description){
                 return apiResponse.notProvided(res, 'Description');
             }
                             
-            const task = await new TaskRepository().getTaskById(userId, taskId);
+            const task = await usecase.execute({userId, taskId, description, archived: type});
 
-            if(!task){
-                return apiResponse.notFound(res, 'Task');
-            }
-
-            if(description) {
-                task.description = description;
-            }
-
-            await new TaskRepository().updateTask(task);
-
-            return apiResponse.successUpdate(res, 'Description', task.toJson());
+            return apiResponse.successUpdate(res, 'Description', task);
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }
