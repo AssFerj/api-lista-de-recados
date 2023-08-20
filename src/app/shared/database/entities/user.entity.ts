@@ -3,16 +3,14 @@ import {
     CreateDateColumn, 
     Entity, 
     OneToMany, 
-    PrimaryColumn, 
+    PrimaryGeneratedColumn, 
     UpdateDateColumn 
 } from "typeorm";
 import { TaskEntity } from "./task.entity";
 
 @Entity('users')
 export class UserEntity {
-    @PrimaryColumn({
-        type: 'uuid'
-    })
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({
