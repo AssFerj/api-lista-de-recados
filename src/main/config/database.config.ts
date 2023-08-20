@@ -12,5 +12,5 @@ export default new DataSource({
     },
     migrations: ["src/app/shared/database/migrations/**/*.ts"],
     entities: ["src/app/shared/database/entities/**/*.ts"],
-    schema: "lista_redacos",
+    schema: "lista_recados",
 });

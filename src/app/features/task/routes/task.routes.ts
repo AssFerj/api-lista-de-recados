@@ -1,9 +1,9 @@
 import { Router } from "express"
 import { TaskController } from "../controllers/tasks.controllers";
-import { taskValidateFields } from "../../../../middlewares/taskValidateFields.middleware";
-import { taskValidateIdsParams } from "../../../../middlewares/taskValidateIdsParams.middleware";
-import { userValidateUserIdParams } from "../../../../middlewares/userValidateUserIdParams.middleware";
-import { taskValidateQueryParams } from "../../../../middlewares/taskValidateQuery.middleware";
+import { taskValidateFields } from "../validators/taskValidateFields.middleware";
+import { userValidateUserIdParams } from "../../user/validators/userValidateUserIdParams.middleware";
+import { taskValidateIdsParams } from "../validators/taskValidateIdsParams.middleware";
+import { taskValidateQueryParams } from "../validators/taskValidateQuery.middleware";
 
 export const taskRoutes = ()=> {
     const app = Router({
