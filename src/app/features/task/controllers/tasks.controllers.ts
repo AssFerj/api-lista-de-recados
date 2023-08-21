@@ -6,6 +6,7 @@ import { TaskRepository } from "../../task/repository/task.repository";
 import { GetTaskByIdUsecase } from "../usecases/get-task-by-id.usecase";
 import { UpdateTaskUsecase } from "../usecases/update-task.usecase";
 import { ListTasksUsecase } from "../usecases/list-tasks.usecase";
+import { DeleteTaskUsecase } from "../usecases/delete-task.usecase";
 
 export class TaskController {
     // CREATE
@@ -84,7 +85,8 @@ export class TaskController {
     public async deleteTask (req: Request, res: Response) {
         try {
             const { taskId } = req.params;
-            const deletedTask = await new TaskRepository().deleteTask(taskId);
+            const usecase = new DeleteTaskUsecase()
+            const deletedTask = await usecase.execute(taskId);
 
             return apiResponse.successDelete(res, 'Task', deletedTask);
         } catch (error) {
