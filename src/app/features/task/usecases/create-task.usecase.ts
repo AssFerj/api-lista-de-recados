@@ -7,7 +7,7 @@ export class CreateTaskUsecase {
         const repository = new TaskRepository();
         const result = repository.addTask(task)
         const cacheRepository = new CacheRepository();
-        await cacheRepository.delete("tasks");
+        await cacheRepository.delete(`task-${task.id}`);
         return {
             ok: true,
             message: "Task successfully created",
