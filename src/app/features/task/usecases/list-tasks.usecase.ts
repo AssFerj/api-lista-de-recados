@@ -9,8 +9,6 @@ export class ListTasksUsecase {
         const cache = await cacheRepository.get(`tasks-${userId}`)
         if(cache){
             return {
-                ok: true,
-                code: 200,
                 message: 'Tasks successfully listed in cache',
                 date: cache
             }
