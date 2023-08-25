@@ -11,7 +11,7 @@ export class JwtService {
     }
 
     //VALIDA O TOKEN
-    public verifyTopken(token: string): boolean {
+    public verifyToken(token: string): boolean {
         try {
             jwt.verify(token, process.env.JWT_SECRET!);
             return true;
