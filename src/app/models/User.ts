@@ -34,17 +34,12 @@ export class User{
         return this._password;
     }
 
-    // public get task(): Task[] {
-    //     return this._tasks;
-    // }
-
     public toJson() {
         return {
             id: this._id,
             firstName: this._firstName,
             lastName: this._lastName,
             email: this._email,
-            // password: this._password
         };
     }
 
