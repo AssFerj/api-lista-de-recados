@@ -43,6 +43,20 @@ export class UserRepository {
     return UserRepository.mapRowToModel(result);
   }
 
+  public async getUserByEmail(email: string) {
+    const result = await this.repository.findOne({
+      where: {
+        email: email
+      }
+    })
+
+    if(!result) {
+      return undefined;
+    }
+
+    return UserRepository.mapRowToModel(result);
+  }
+
   public async getById(id: string) {
     const result = await this.repository.findOne({
       where: {
