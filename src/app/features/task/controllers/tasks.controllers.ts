@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import { apiResponse } from "../../../shared/util/apiResponse.adapter";
 import { Task } from "../../../models/Task";
 import { UserRepository } from "../../user/repository/user.repository";
-import { TaskRepository } from "../../task/repository/task.repository";
 import { GetTaskByIdUsecase } from "../usecases/get-task-by-id.usecase";
 import { UpdateTaskUsecase } from "../usecases/update-task.usecase";
 import { ListTasksUsecase } from "../usecases/list-tasks.usecase";
 import { CreateTaskUsecase } from "../usecases/create-task.usecase";
-import { GetUserByIdUsecase } from "../../user/usecases/get-user-by-id.usecase";
+import { DeleteTaskUsecase } from "../usecases/delete-task.usecase";
 
 export class TaskController {
     // CREATE
