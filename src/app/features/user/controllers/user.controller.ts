@@ -44,24 +44,6 @@ export class UserController {
             console.log("login controller");
             const { email, password } = req.body;
 
-            // if(!email){
-            //     return apiResponse.notProvided(res, 'E-mail');
-            // }
-
-            // if(!password){
-            //     return apiResponse.notProvided(res, 'Password');
-            // }
-
-            // const repository = new UserRepository();
-
-            // const loggedUser = new User('', '', email, password);
-
-            // if(!loggedUser){
-            //     return apiResponse.ivalidCredentials(res);
-            // }
-
-            // const result = await repository.login(loggedUser)
-
             const result = await new LoginUsecase().execute({
                 email,
                 password,
@@ -85,10 +67,6 @@ export class UserController {
             if(!findUser){
                 return apiResponse.ivalidCredentials(res);
             }
-
-            // if(findUser.password !== password){
-            //     return apiResponse.ivalidCredentials(res);
-            // }
 
             return apiResponse.success(res, 'User', findUser);
             
