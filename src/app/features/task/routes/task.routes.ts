@@ -1,20 +1,18 @@
 import { Router } from "express"
 import { TaskController } from "../controllers/tasks.controllers";
-import { taskValidateFields } from "../validators/taskValidateFields.middleware";
-import { userValidateUserIdParams } from "../../user/validators/userValidateUserIdParams.middleware";
-import { taskValidateIdsParams } from "../validators/taskValidateIdsParams.middleware";
-import { taskValidateQueryParams } from "../validators/taskValidateQuery.middleware";
+import { createTaskValidateFields } from "../validators/createTaskValidateFields.middleware";
+import { updateTaskValidateFields } from "../validators/updateTaskValidateFields.middleware";
 
 export const taskRoutes = ()=> {
     const app = Router({
         mergeParams: true
     });
 
-    app.get('/', [/*userValidateUserIdParams, taskValidateQueryParams*/], new TaskController().list);
-    app.get('/:taskId', [/*userValidateUserIdParams, taskValidateQueryParams*/], new TaskController().getTaskById);
-    app.post('/', [/*userValidateUserIdParams, taskValidateFields*/], new TaskController().create);
-    app.put('/:taskId', [/*taskValidateIdsParams*/], new TaskController().updateTask);
-    app.delete('/:taskId', [/*taskValidateIdsParams*/], new TaskController().deleteTask);
+    app.get('/', new TaskController().list);
+    app.get('/:taskId', new TaskController().getTaskById);
+    app.post('/', [createTaskValidateFields], new TaskController().create);
+    app.put('/:taskId', [/*updateTaskValidateFields*/], new TaskController().updateTask);
+    app.delete('/:taskId', new TaskController().deleteTask);
 
     return app;
 }

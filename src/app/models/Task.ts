@@ -1,12 +1,12 @@
 import { v4 as createUuid } from "uuid";
 import { User } from "./User";
+import { TaskEntity } from "../shared/database/entities/task.entity";
 
 export class Task {
     private _id: string;
 
     constructor(private _description: string, private _userId: string, private _type: boolean, private _user: User) {
         this._id = createUuid();
-        this._type = false;
     }
 
     public get id(): string{
@@ -34,12 +34,12 @@ export class Task {
         }
     }
 
-    public static create(entity: any) {
+    public static create(entity: TaskEntity, user: User) {
         const task = new Task(
             entity.description,
             entity.userId,
-            entity.type,
-            entity.user
+            entity.archived,
+            user
         )
         task._id = entity.id;
 

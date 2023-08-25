@@ -1,5 +1,6 @@
 import { Database } from "../../../../main/database/database.connection";
 import { Task } from "../../../models/Task";
+import { User } from "../../../models/User";
 import { TaskEntity } from "../../../shared/database/entities/task.entity";
 
 
@@ -17,9 +18,14 @@ export class TaskRepository {
     }
   
     public async listTasks(userId: string, type: boolean) {
-      const result = await this.repository.findBy({
-        userId: userId,
-        archived: type
+      const result = await this.repository.find({
+        where : {
+          userId: userId,
+          archived: type
+        },
+        relations: {
+          user: true
+        }
       });
       return result.map((entity) => TaskRepository.mapRowToModel(entity));    
     }
@@ -41,13 +47,13 @@ export class TaskRepository {
       return TaskRepository.mapRowToModel(result);
     }
   
-    public async updateTask(task: Task) {
+    public async updateTask(task: Task) {      
       this.repository.update({
         id: task.id
       },{
         description: task.description,
         archived: task.type
-      })
+      })      
     }
   
     public async deleteTask(taskId: string) {
@@ -56,6 +62,7 @@ export class TaskRepository {
     }
 
     public static mapRowToModel(row: TaskEntity) {
-      return Task.create(row);
+      const user = User.create(row.user)
+      return Task.create(row, user);
     }
 }

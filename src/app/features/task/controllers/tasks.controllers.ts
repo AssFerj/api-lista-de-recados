@@ -6,6 +6,8 @@ import { TaskRepository } from "../../task/repository/task.repository";
 import { GetTaskByIdUsecase } from "../usecases/get-task-by-id.usecase";
 import { UpdateTaskUsecase } from "../usecases/update-task.usecase";
 import { ListTasksUsecase } from "../usecases/list-tasks.usecase";
+import { CreateTaskUsecase } from "../usecases/create-task.usecase";
+import { GetUserByIdUsecase } from "../../user/usecases/get-user-by-id.usecase";
 
 export class TaskController {
     // CREATE
@@ -14,15 +16,14 @@ export class TaskController {
             const { userId } = req.params;
             const { description, type } = req.body;
 
-            const user = await new UserRepository().getById(userId);
+            const user = await new UserRepository().getById(userId)
             
             if(!user){
                 return apiResponse.notFound(res, 'User');
             }
-
+            
             const newTask = new Task(description, userId, type, user);
-
-            await new TaskRepository().addTask(newTask);
+            new CreateTaskUsecase().execute(newTask);
 
             return apiResponse.successCreate(res, 'Task', newTask.toJson());
             
@@ -37,7 +38,6 @@ export class TaskController {
             const { userId } = req.params;
             const { type } = req.query;
             const usecase = new ListTasksUsecase();
-            
 
             let tasks = await usecase.execute(userId, type as string);
         
@@ -62,18 +62,13 @@ export class TaskController {
 
     // UPDATE
     public async updateTask (req: Request, res: Response) {
-        try {
+        try {            
             const usecase = new UpdateTaskUsecase();
-            
             const { userId, taskId } = req.params;
             const { description, type } = req.body;
-
-            if(!description){
-                return apiResponse.notProvided(res, 'Description');
-            }
-                            
+                       
             const task = await usecase.execute({userId, taskId, description, archived: type});
-
+            
             return apiResponse.successUpdate(res, 'Description', task);
         } catch (error) {
             return apiResponse.errorMessage(res, error);

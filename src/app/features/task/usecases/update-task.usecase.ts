@@ -1,3 +1,4 @@
+import { UserRepository } from "../../user/repository/user.repository";
 import { TaskRepository } from "../repository/task.repository";
 
 interface GetTaskByIdParams {
@@ -10,7 +11,17 @@ interface GetTaskByIdParams {
 export class UpdateTaskUsecase {
     public async execute (params: GetTaskByIdParams) {
         const repository = new TaskRepository()
+        const userRepository = new UserRepository();
         const task = await repository.getTaskById(params.taskId)
+        const findUser = await userRepository.getById(params.userId);        
+
+        if(!findUser) {
+            return {
+                ok: false,
+                message: 'User not found',
+                code: 404
+            }
+        }
 
         if(!task) {
             return {
@@ -20,6 +31,10 @@ export class UpdateTaskUsecase {
             }
         }
 
+        if(!params.description){
+            return 'Description is not provided'
+        }
+
         if(params.description) {
             task.description = params.description;
         }
@@ -27,7 +42,7 @@ export class UpdateTaskUsecase {
         if(params.archived) {
             task.type = params.archived;
         }
-
+        
         await repository.updateTask(task)
 
         return task.toJson()
