@@ -5,6 +5,7 @@ import { UserRepository } from '../repository/user.repository';
 import { ListUsersUsecase } from "../usecases/list-user.usecase";
 import { CreateUserUsecase } from "../usecases/create-user.usecase";
 import { GetUserByIdUsecase } from "../usecases/get-user-by-id.usecase";
+import { LoginUsecase } from "../usecases/login.usecase";
 
 export class UserController {
     // CREATE
@@ -43,25 +44,30 @@ export class UserController {
             console.log("login controller");
             const { email, password } = req.body;
 
-            if(!email){
-                return apiResponse.notProvided(res, 'E-mail');
-            }
+            // if(!email){
+            //     return apiResponse.notProvided(res, 'E-mail');
+            // }
 
-            if(!password){
-                return apiResponse.notProvided(res, 'Password');
-            }
+            // if(!password){
+            //     return apiResponse.notProvided(res, 'Password');
+            // }
 
-            const repository = new UserRepository();
+            // const repository = new UserRepository();
 
-            const loggedUser = new User('', '', email, password);
+            // const loggedUser = new User('', '', email, password);
 
-            if(!loggedUser){
-                return apiResponse.ivalidCredentials(res);
-            }
+            // if(!loggedUser){
+            //     return apiResponse.ivalidCredentials(res);
+            // }
 
-            const result = await repository.login(loggedUser)
+            // const result = await repository.login(loggedUser)
+
+            const result = await new LoginUsecase().execute({
+                email,
+                password,
+            });
             
-            return apiResponse.successLogin(res, 'User', loggedUser.toJson());
+            return apiResponse.successLogin(res, 'User', result);
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);
