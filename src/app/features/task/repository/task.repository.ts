@@ -56,7 +56,7 @@ export class TaskRepository {
       })      
     }
   
-    public async deleteTask(taskId: string) {
+    public async deleteTask(taskId: string) {     
       const result = await this.repository.delete(taskId);
       return result.affected ?? 0;
     }

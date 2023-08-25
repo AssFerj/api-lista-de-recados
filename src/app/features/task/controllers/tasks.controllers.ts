@@ -77,9 +77,10 @@ export class TaskController {
 
     // DELETE
     public async deleteTask (req: Request, res: Response) {
-        try {
+        try {          
             const { taskId } = req.params;
-            const deletedTask = await new TaskRepository().deleteTask(taskId);
+            const usecase = new DeleteTaskUsecase()
+            const deletedTask = await usecase.execute(taskId);
 
             return apiResponse.successDelete(res, 'Task', deletedTask);
         } catch (error) {
