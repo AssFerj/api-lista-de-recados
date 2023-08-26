@@ -1,3 +1,5 @@
+import { CacheRepository } from "../../../shared/database/repository/cache.repositiry";
+import { UsecaseResponse } from "../../../shared/util/usecase.response";
 import { UserRepository } from "../../user/repository/user.repository";
 import { TaskRepository } from "../repository/task.repository";
 
@@ -10,29 +12,22 @@ interface GetTaskByIdParams {
 
 export class UpdateTaskUsecase {
     public async execute (params: GetTaskByIdParams) {
-        const repository = new TaskRepository()
+        const repository = new TaskRepository();
+        const cache = new CacheRepository();
         const userRepository = new UserRepository();
         const task = await repository.getTaskById(params.taskId)
         const findUser = await userRepository.getById(params.userId);        
 
         if(!findUser) {
-            return {
-                ok: false,
-                message: 'User not found',
-                code: 404
-            }
+            return UsecaseResponse.notFound('User not found')
         }
 
         if(!task) {
-            return {
-                ok: false,
-                message: 'Task not found',
-                code: 404
-            }
+            return UsecaseResponse.notFound('Task not found')
         }
 
         if(!params.description){
-            return 'Description is not provided'
+            return UsecaseResponse.notFound('Description is not provided')
         }
 
         if(params.description) {
@@ -44,7 +39,9 @@ export class UpdateTaskUsecase {
         }
         
         await repository.updateTask(task)
+        await cache.delete(`task-${params.taskId}`)
+        await cache.delete(`tasks-${params.userId}`)
 
-        return task.toJson()
+        return UsecaseResponse.success('Task succesfully updated', task.toJson())
     }
 }
