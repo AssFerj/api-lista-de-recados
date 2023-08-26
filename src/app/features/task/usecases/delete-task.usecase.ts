@@ -6,7 +6,6 @@ export class DeleteTaskUsecase {
         const repository = new TaskRepository()
         await repository.deleteTask(taskId)
         const cacheRepository = new CacheRepository()
-        await cacheRepository.delete(`tasks`)
-        await cacheRepository.delete(`tasks-${taskId}`)
+        await cacheRepository.delete(`task-${taskId}`)
     }
 }
