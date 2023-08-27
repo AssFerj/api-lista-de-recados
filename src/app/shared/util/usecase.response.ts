@@ -3,7 +3,7 @@ export class UsecaseResponse {
         return {
             ok: false,
             message: `${field} not found`,
-            cod: 404
+            code: 404
         }
     }
 
@@ -11,7 +11,7 @@ export class UsecaseResponse {
         return {
             ok: false,
             message: `Invalid credentials`,
-            cod: 401
+            code: 401
         }
     }
 
@@ -19,8 +19,16 @@ export class UsecaseResponse {
         return {
             ok: true,
             message,
-            cod: 200,
+            code: 200,
             data
+        }
+    }
+
+    public static alreadyExist(message: string) {
+        return {
+            ok: true,
+            message,
+            code: 200,
         }
     }
 }

@@ -41,7 +41,6 @@ export class UserController {
     // LOGIN
     public async login(req: Request, res: Response) {
         try {
-            console.log("login controller");
             const { email, password } = req.body;
 
             const result = await new LoginUsecase().execute({

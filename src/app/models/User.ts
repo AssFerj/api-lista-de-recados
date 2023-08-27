@@ -1,4 +1,5 @@
 import { v4 as createUuid } from "uuid";
+import { UserEntity } from "../shared/database/entities/user.entity";
 
 export class User{
     private _id: string;
@@ -43,7 +44,7 @@ export class User{
         };
     }
 
-    public static create(entity: any){
+    public static create(entity: UserEntity){
         const user = new User(
             entity.firstName,
             entity.lastName,

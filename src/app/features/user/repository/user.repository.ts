@@ -2,10 +2,10 @@ import { Database } from '../../../../main/database/database.connection'
 import { User } from "../../../../app/models/User";
 import { UserEntity } from '../../../shared/database/entities/user.entity'
 
-interface LoggedUser {
-  email: string;
-  password: string;
-}
+// interface LoggedUser {
+//   email: string;
+//   password: string;
+// }
 export class UserRepository {
   private repository = Database.connection.getRepository(UserEntity);
 
@@ -14,7 +14,7 @@ export class UserRepository {
     return result.map((entity) => UserRepository.mapRowToModel(entity));    
   }
 
-  public async createUser(user: User) {
+  public async createUser(user: User): Promise<User | undefined> {
     const userEntity = this.repository.create({
       firstName: user.firstName,
       lastName: user.lastName,
@@ -22,28 +22,22 @@ export class UserRepository {
       password: user.password
     });
 
-    await this.repository.save(userEntity);
+    const result = await this.repository.save(userEntity);
+    return UserRepository.mapRowToModel(result)
   }
 
-  public async login(logedUser: User) {
+  public async login(logedUser: User): Promise<User | undefined> {
     const result = await this.repository.findOne({
       where: {
         email: logedUser.email,
         password: logedUser.password,
       },
     });
-
-    if (!result) {
-      return undefined;
-    }
-    // console.log(result);
-    // console.log(UserRepository.mapRowToModel(result));
-    
     
     return UserRepository.mapRowToModel(result);
   }
 
-  public async getUserByEmail(email: string) {
+  public async getUserByEmail(email: string): Promise<User | undefined> {
     const result = await this.repository.findOne({
       where: {
         email: email
@@ -57,21 +51,20 @@ export class UserRepository {
     return UserRepository.mapRowToModel(result);
   }
 
-  public async getById(id: string) {
+  public async getById(id: string): Promise<User | undefined> {
     const result = await this.repository.findOne({
       where: {
         id: id
       }
     })
 
-    if(!result) {
-      return undefined;
-    }
-
     return UserRepository.mapRowToModel(result);
   }
 
-  public static mapRowToModel(row: UserEntity) {
+  public static mapRowToModel(row?: UserEntity | null) {
+    if(!row) {
+      return undefined;
+    }
     return User.create(row);
   }
 }
