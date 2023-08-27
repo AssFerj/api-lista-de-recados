@@ -22,9 +22,9 @@ export class TaskController {
             }
             
             const newTask = new Task(description, userId, type, user);
-            new CreateTaskUsecase().execute(newTask);
+            const result = await new CreateTaskUsecase().execute(newTask);
 
-            return apiResponse.successCreate(res, 'Task', newTask.toJson());
+            return res.status(result.code).send(result) //apiResponse.successCreate(res, 'Task', newTask.toJson());
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);
@@ -40,7 +40,7 @@ export class TaskController {
 
             let tasks = await usecase.execute(userId, type as string);
         
-            return apiResponse.success(res, 'Tasks', tasks);
+            return res.status(tasks.code).send(tasks) //apiResponse.success(res, 'Tasks', tasks);
         
             } catch (error: any) {
             return apiResponse.errorMessage(res, error);
@@ -53,7 +53,7 @@ export class TaskController {
             const usecase = new GetTaskByIdUsecase();
             const result = await usecase.execute(taskId);          
 
-            return apiResponse.success(res, 'Task', result);
+            return res.status(result.code).send(result) //apiResponse.success(res, 'Task', result);
         } catch (error: any) {
             return apiResponse.errorMessage(res, error);
         }
@@ -68,7 +68,7 @@ export class TaskController {
                        
             const task = await usecase.execute({userId, taskId, description, archived: type});
             
-            return apiResponse.successUpdate(res, 'Description', task);
+            return res.status(task.code).send(task) //apiResponse.successUpdate(res, 'Description', task);
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }
@@ -81,7 +81,7 @@ export class TaskController {
             const usecase = new DeleteTaskUsecase()
             const deletedTask = await usecase.execute(taskId);
 
-            return apiResponse.successDelete(res, 'Task', deletedTask);
+            return res.status(deletedTask.code).send(deletedTask) //apiResponse.successDelete(res, 'Task', deletedTask);
         } catch (error) {
             return apiResponse.errorMessage(res, error);
         }

@@ -3,7 +3,6 @@ import { UserEntity } from "../shared/database/entities/user.entity";
 
 export class User{
     private _id: string;
-    // private _tasks: Task[];
 
     constructor(
         private _firstName: string, 
@@ -12,7 +11,6 @@ export class User{
         private _password: string
     ){
         this._id = createUuid();
-        // this._tasks = []
     }
 
     public get id(): string {
@@ -71,8 +69,4 @@ export class User{
     public set password(newPassword: string) {
         this._password = newPassword;
     }
-
-    // public set addTask(newTask: Task) {
-    //     this._tasks.push(newTask);
-    // }
 }

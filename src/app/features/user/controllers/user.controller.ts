@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { User } from '../../../models/User';
 import { apiResponse } from '../../../shared/util/apiResponse.adapter';
-import { UserRepository } from '../repository/user.repository';
 import { ListUsersUsecase } from "../usecases/list-user.usecase";
 import { CreateUserUsecase } from "../usecases/create-user.usecase";
 import { GetUserByIdUsecase } from "../usecases/get-user-by-id.usecase";
@@ -17,9 +16,9 @@ export class UserController {
 
             const usecase = new CreateUserUsecase();
 
-            await usecase.execute(user);
+            const result = await usecase.execute(user);
 
-            return apiResponse.successCreate(res, 'User', user.toJson())
+            return res.status(result.code).send(result) //user.toJson())
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);
@@ -32,7 +31,7 @@ export class UserController {
             const usecase = new ListUsersUsecase();
             const result = await usecase.execute();
 
-            return apiResponse.success(res, 'Users', result);
+            return res.status(result.code).send(result)
         }catch (error: any) {
             return apiResponse.errorMessage(res, error);
         }
@@ -67,7 +66,7 @@ export class UserController {
                 return apiResponse.ivalidCredentials(res);
             }
 
-            return apiResponse.success(res, 'User', findUser);
+            return res.status(findUser.code).send(findUser)
             
         } catch (error) {
             return apiResponse.errorMessage(res, error);
