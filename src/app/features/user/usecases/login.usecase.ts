@@ -17,14 +17,6 @@ export class LoginUsecase {
       return UsecaseResponse.unauthorized()
     }
 
-    if(!params.email || user.email !== params.email){
-        return UsecaseResponse.unauthorized()
-    }
-
-    if(!params.password || user.password !== params.password){
-        return UsecaseResponse.unauthorized()
-    }
-
     const loggedUser = new User('', '', params.email, params.password);
 
     if(!loggedUser){
@@ -33,7 +25,11 @@ export class LoginUsecase {
 
     const result = await repository.login(loggedUser)
 
-    if(user.password !== params.password) {
+    if(!params.email || user.email !== params.email){
+      return UsecaseResponse.unauthorized()
+    }
+
+    if(!params.password || user.password !== params.password){
         return UsecaseResponse.unauthorized()
     }
 
