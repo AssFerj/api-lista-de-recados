@@ -14,14 +14,14 @@ export class LoginUsecase {
     const user = await repository.getUserByEmail(params.email);
 
     if (!user) {
-      return UsecaseResponse.notFound('User')
+      return UsecaseResponse.unauthorized()
     }
 
-    if(!params.email){
+    if(!params.email || user.email !== params.email){
         return UsecaseResponse.unauthorized()
     }
 
-    if(!params.password){
+    if(!params.password || user.password !== params.password){
         return UsecaseResponse.unauthorized()
     }
 
