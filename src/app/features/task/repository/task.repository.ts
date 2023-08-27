@@ -40,10 +40,6 @@ export class TaskRepository {
         }
       })
   
-      if(!result) {
-        return undefined;
-      }
-  
       return TaskRepository.mapRowToModel(result);
     }
   
@@ -61,7 +57,10 @@ export class TaskRepository {
       return result.affected ?? 0;
     }
 
-    public static mapRowToModel(row: TaskEntity) {
+    public static mapRowToModel(row?: TaskEntity | null) {
+      if(!row) {
+        return undefined;
+      }
       const user = User.create(row.user)
       return Task.create(row, user);
     }

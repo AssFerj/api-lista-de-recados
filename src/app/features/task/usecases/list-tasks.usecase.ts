@@ -1,24 +1,30 @@
 import { CacheRepository } from "../../../shared/database/repository/cache.repositiry";
+import { Result } from "../../../shared/util/result.contract";
+import { Usecase } from "../../../shared/util/usecase.contract";
 import { UsecaseResponse } from "../../../shared/util/usecase.response";
 import { TaskRepository } from "../repository/task.repository";
 
-export class ListTasksUsecase {
-    public async execute (userId: string, type: string) {
-        if(!userId){
+interface ListTasksParams {
+    userId: string;
+    type: string;
+}
+export class ListTasksUsecase implements Usecase {
+    public async execute(params: ListTasksParams): Promise<Result> {
+        if(!params.userId){
             return UsecaseResponse.notFound('User ID')
         }
-        if(!type){
+        if(!params.type){
             return UsecaseResponse.notFound('Type')
         }
         const repository = new TaskRepository()
         const cacheRepository = new CacheRepository()
-        const typeConvert = type === 'true' ? true : false;
-        const cache = await cacheRepository.get(`tasks-${userId}`)
+        const typeConvert = params.type === 'true' ? true : false;
+        const cache = await cacheRepository.get(`tasks-${params.userId}`)
         if(cache){
             return UsecaseResponse.success('Tasks successfully listed in cache', cache)
         }
-        const result = await repository.listTasks(userId, typeConvert)
-        await cacheRepository.set(`tasks-${userId}`, result.map(task => task.toJson()))        
-        return result.map(task => task.toJson())
+        const result = await repository.listTasks(params.userId, typeConvert)
+        await cacheRepository.set(`tasks-${params.userId}`, result)        
+        return UsecaseResponse.success('Tasks succesfully listed', result)
     }
 }
