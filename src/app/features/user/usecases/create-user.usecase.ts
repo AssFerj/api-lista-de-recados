@@ -17,7 +17,7 @@ export class CreateUserUsecase implements Usecase {
     public async execute (params: CreateUserParams): Promise<Result> {
         const repository = new UserRepository();
         const user = new User(params.firstName, params.lastName, params.email, params.password)
-        const validateUserByEmail = await repository.getById(params.email)
+        const validateUserByEmail = await repository.getUserByEmail(params.email)
         if(validateUserByEmail){
             return UsecaseResponse.alreadyExist('User already exist')
         }
