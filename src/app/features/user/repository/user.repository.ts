@@ -11,6 +11,10 @@ export class UserRepository {
 
   public async listUsers() {
     const result = await this.repository.find();    
+    console.log('list user repository' + result);
+    console.log(result.map((entity) => UserRepository.mapRowToModel(entity)));
+    
+    
     return result.map((entity) => UserRepository.mapRowToModel(entity));    
   }
 

@@ -2,7 +2,7 @@ export class UsecaseResponse {
     public static notFound(field: string) {
         return {
             ok: false,
-            message: `${field} not found`,
+            message: field,
             code: 404
         }
     }
@@ -28,7 +28,7 @@ export class UsecaseResponse {
         return {
             ok: true,
             message,
-            code: 200,
+            code: 400,
         }
     }
 }

@@ -10,6 +10,7 @@ export class DeleteTaskUsecase implements Usecase {
         const result = await repository.deleteTask(taskId)
         const cacheRepository = new CacheRepository()
         await cacheRepository.delete(`task-${taskId}`)
+        // await cacheRepository.delete(`tasks-${userId}`)
         return UsecaseResponse.success('Task succesfully deleted', result)
     }
 }
