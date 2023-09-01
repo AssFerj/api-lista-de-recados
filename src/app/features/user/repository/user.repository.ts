@@ -11,9 +11,6 @@ export class UserRepository {
 
   public async listUsers() {
     const result = await this.repository.find();    
-    console.log('list user repository' + result);
-    console.log(result.map((entity) => UserRepository.mapRowToModel(entity)));
-    
     
     return result.map((entity) => UserRepository.mapRowToModel(entity));    
   }
@@ -65,7 +62,7 @@ export class UserRepository {
     return UserRepository.mapRowToModel(result);
   }
 
-  public static mapRowToModel(row?: UserEntity | null) {
+  public static mapRowToModel(row?: UserEntity | null): User | undefined {
     if(!row) {
       return undefined;
     }

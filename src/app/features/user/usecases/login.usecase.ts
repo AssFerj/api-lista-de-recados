@@ -5,41 +5,24 @@ import { Usecase } from "../../../shared/util/usecase.contract";
 import { UsecaseResponse } from "../../../shared/util/usecase.response";
 import { UserRepository } from "../repository/user.repository";
 
-interface LoginParams {
+export interface LoginParams {
     email: string;
     password: string;
 }
 
 export class LoginUsecase {
-  public async execute(params: LoginParams) {
+  public async execute(params: LoginParams): Promise<Result> {
     const repository = new UserRepository();
-    const user = await repository.getUserByEmail(params.email);
+    const user = new User('', '', params.email, params.password)
 
-    if (!user) {
+    const result = await repository.login(user)
+
+    if(!result) {
       return UsecaseResponse.unauthorized()
     }
-
-    if(!params.email || user.email !== params.email){
-      return UsecaseResponse.unauthorized()
-    }
-
-    if(!params.password || user.password !== params.password){
-        return UsecaseResponse.unauthorized()
-    }
-    
-    const loggedUser = new User('', '', params.email, params.password);
-
-    if(!loggedUser){
-        return UsecaseResponse.unauthorized()
-    }
-
-    const result = await repository.login(loggedUser)
 
     const token = new JwtService().createToken(user.toJson());
 
-    return UsecaseResponse.success("Login successfully done", result), {
-    ...user.toJson(),
-    token,
-    }
+    return UsecaseResponse.success("Login successfully done", {result, token})
   }
 }

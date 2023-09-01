@@ -26,7 +26,7 @@ export class UsecaseResponse {
 
     public static alreadyExist(message: string) {
         return {
-            ok: true,
+            ok: false,
             message,
             code: 400,
         }

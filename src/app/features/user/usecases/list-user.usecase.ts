@@ -7,10 +7,9 @@ export class ListUsersUsecase implements Usecase {
     public async execute(): Promise<Result> {
         const repository = new UserRepository();
         const result = await repository.listUsers()
-        console.log('list users usecase'+result);
 
-        if(!result) {
-            return UsecaseResponse.notFound('Users not found')
+        if(result.length === 0) {
+            return UsecaseResponse.notFound('Not have Users')
         }
         
         return UsecaseResponse.success('Users succesfully listed', result.map(user => user?.toJson()))
