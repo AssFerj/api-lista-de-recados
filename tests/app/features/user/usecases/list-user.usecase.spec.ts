@@ -19,22 +19,19 @@ describe('List Users Usecase', ()=>{
             'any_password'
         )
     }
-    // test('Testar retorno da lista de usuários do banco quando não houver usuários cadastrados', async ()=>{
-    //     jest
-    //         .spyOn(UserRepository.prototype, 'listUsers')
-    //         .mockResolvedValue([])
+    test('Deveria retornar users not found', async ()=>{
+        jest
+            .spyOn(UserRepository.prototype, 'listUsers').mockResolvedValue([])
+            
 
-    //     const result = await sut.execute();
+        const result = await sut.execute();
 
-    //     /// Retornando true mas deveria retornar false
-    //     expect(result).toBeDefined();
-    //     expect(result.ok).toEqual(false);
-    //     expect(result.message).toEqual('Users not found');
-    //     expect(result.code).toBe(404);
-    //     expect(result.data).toHaveLength(0);
-    //     expect(result).not.toHaveProperty([]);
-    // })
-    test('Testar retorno da lista de usuários do banco quando houver usuários cadastrados', async ()=>{
+        expect(result).toBeDefined();
+        expect(result.ok).toBe(false);
+        expect(result.message).toEqual('Not have Users');
+        expect(result.code).toBe(404);
+    })
+    test('Deveria retornar users seccesfully listed quando for consultado os usuários', async ()=>{
         const user1 = userMockSut('any_email1')
         const user2 = userMockSut('any_email2')
         jest
