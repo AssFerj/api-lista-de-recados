@@ -4,7 +4,7 @@ export default {
     preset: "ts-jest", // Seta que que é um projeto desenvolvido em typescript
     testEnvironment: "node", // Seta que é um teste específico de backend
     transform: {
-        ".+\\.ts$": "ts-jest", // Transforma tudo que é typescript com jest durante os testes
+        ".+\\.ts$": ["ts-jest",{ isolatedModules: true }] // Transforma tudo que é typescript com jest durante os testes
     },
     // Informa em qual diretório os testes
     // estarão contidos.
