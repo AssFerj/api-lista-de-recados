@@ -8,6 +8,10 @@ import { ListTasksUsecase } from "../usecases/list-tasks.usecase";
 import { CreateTaskUsecase } from "../usecases/create-task.usecase";
 import { DeleteTaskUsecase } from "../usecases/delete-task.usecase";
 
+interface ListTaskParams {
+    userId: string;
+    type: string;
+}
 export class TaskController {
     // CREATE
     public async create(req: Request, res: Response) {
@@ -38,7 +42,12 @@ export class TaskController {
             const { type } = req.query;
             const usecase = new ListTasksUsecase();
 
-            let tasks = await usecase.execute(userId, type as string);
+            const params: ListTaskParams = {
+                userId: userId,
+                type: type  as string
+            }
+
+            let tasks = await usecase.execute(params);
         
             return res.status(tasks.code).send(tasks) //apiResponse.success(res, 'Tasks', tasks);
         
