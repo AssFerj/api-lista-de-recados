@@ -3,7 +3,6 @@ import { Task } from "../../../models/Task";
 import { User } from "../../../models/User";
 import { TaskEntity } from "../../../shared/database/entities/task.entity";
 
-
 export class TaskRepository {
   private repository = Database.connection.getRepository(TaskEntity);
 
@@ -14,8 +13,9 @@ export class TaskRepository {
       archived: task.type
     });
 
-    await this.repository.save(taskEntity);
-    }
+    const result = await this.repository.save(taskEntity);
+    return TaskRepository.mapRowToModel(result);
+  }
   
     public async listTasks(userId: string, type: boolean) {
       const result = await this.repository.find({
