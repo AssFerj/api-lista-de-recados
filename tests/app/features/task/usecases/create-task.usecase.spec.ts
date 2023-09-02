@@ -1,6 +1,5 @@
 import { Database } from '../../../../../src/main/database/database.connection';
 import { RedisDatabase } from '../../../../../src/main/database/redis.connection';
-import { CacheRepository } from '../../../../../src/app/shared/database/repository/cache.repositiry'
 import { CreateTaskUsecase } from '../../../../../src/app/features/task/usecases/create-task.usecase'
 import { TaskRepository } from '../../../../../src/app/features/task/repository/task.repository';
 import { Task } from '../../../../../src/app/models/Task';
