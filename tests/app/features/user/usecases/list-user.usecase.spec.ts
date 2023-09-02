@@ -30,6 +30,7 @@ describe('List Users Usecase', ()=>{
         expect(result.ok).toBe(false);
         expect(result.message).toEqual('Not have Users');
         expect(result.code).toBe(404);
+        expect(result).not.toHaveProperty('data')
     })
     test('Deveria retornar users seccesfully listed quando for consultado os usuários', async ()=>{
         const user1 = userMockSut('any_email1')
