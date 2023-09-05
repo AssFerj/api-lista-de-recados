@@ -4,16 +4,28 @@ import { CreateTaskUsecase } from '../../../../../src/app/features/task/usecases
 import { TaskRepository } from '../../../../../src/app/features/task/repository/task.repository';
 import { Task } from '../../../../../src/app/models/Task';
 import { User } from '../../../../../src/app/models/User';
+import { CacheRepository } from '../../../../../src/app/shared/database/repository/cache.repositiry';
 
 describe('Testes unitários do create task usecase', () => {
     beforeAll(async () => {
-        await Database.connect();
-        await RedisDatabase.connect();
+        await Database.connect()
+        await RedisDatabase.connect()
+
+        jest.setTimeout(20000)
     })
+
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+
+        jest.setTimeout(20000)
+      })
 
     afterAll(async () => {
         await Database.connection.destroy()
         await RedisDatabase.connection.quit()
+
+        jest.setTimeout(20000)
     })
 
     const user = new User('fName', 'lName', 'email', 'pass')
