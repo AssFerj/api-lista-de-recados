@@ -50,6 +50,20 @@ export class TaskRepository {
         description: task.description,
         archived: task.type
       })      
+      /////////////////////////
+      // const updateResult = await this.repository.createQueryBuilder()
+      //   .update(TaskEntity) 
+      //   .set({
+      //       description: task.description,
+      //       archived: task.type
+      //   })
+      //   .where("id = :id", { id: task.id })
+      //   .execute();
+
+      // // O resultado da atualização contém informações sobre o número de registros afetados
+      // const numberOfAffectedRows = updateResult.affected ?? 0;
+
+      // return numberOfAffectedRows;
     }
   
     public async deleteTask(taskId: string) {     

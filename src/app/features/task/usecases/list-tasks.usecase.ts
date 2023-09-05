@@ -11,10 +11,10 @@ interface ListTasksParams {
 export class ListTasksUsecase implements Usecase {
     public async execute(params: ListTasksParams): Promise<Result> {
         if(!params.userId){
-            return UsecaseResponse.notFound('User ID')
+            return UsecaseResponse.notFound('User ID is not found')
         }
         if(!params.type){
-            return UsecaseResponse.notFound('Type')
+            return UsecaseResponse.notFound('Type is not found')
         }
         const repository = new TaskRepository()
         const cacheRepository = new CacheRepository()
@@ -25,6 +25,6 @@ export class ListTasksUsecase implements Usecase {
         }
         const result = await repository.listTasks(params.userId, typeConvert)
         await cacheRepository.set(`tasks-${params.userId}`, result)        
-        return UsecaseResponse.success('Tasks succesfully listed', result)
+        return UsecaseResponse.success('Tasks successfully listed', result)
     }
 }

@@ -16,27 +16,25 @@ export class UpdateTaskUsecase implements Usecase {
     public async execute (params: GetTaskByIdParams): Promise<Result> {
         const repository = new TaskRepository();
         const cache = new CacheRepository();
-        const userRepository = new UserRepository();
         const task = await repository.getTaskById(params.taskId)
-        const findUser = await userRepository.getById(params.userId);        
-        if(!findUser) {
-            return UsecaseResponse.notFound('User not found')
-        }
+
         if(!task) {
             return UsecaseResponse.notFound('Task not found')
         }
-        if(!params.description){
+        if(!params.description || params.description === ''){
             return UsecaseResponse.notFound('Description is not provided')
         }
         if(params.description) {
             task.description = params.description;
         }
-        if(params.archived) {
+        if(params.archived !== undefined) {
             task.type = params.archived;
         }
+
         await repository.updateTask(task)
         await cache.delete(`task-${params.taskId}`)
         await cache.delete(`tasks-${params.userId}`)
+
         return UsecaseResponse.success('Task succesfully updated', task.toJson())
     }
 }
