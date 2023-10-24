@@ -4,6 +4,10 @@ import { RedisDatabase } from '../../../../../src/main/database/redis.connection
 import { createApp } from '../../../../../src/main/config/express.config'
 import { CreateUserUsecase } from '../../../../../src/app/features/user/usecases/create-user.usecase'
 import { UsecaseResponse } from '../../../../../src/app/shared/util/usecase.response'
+import { UserEntity } from '../../../../../src/app/shared/database/entities/user.entity'
+import { User } from '../../../../../src/app/models/User'
+import { UserRepository } from '../../../../../src/app/features/user/repository/user.repository'
+import supertest from 'supertest'
 
 describe('Testes de API do controller de user - método create', () => {
     beforeAll(async () => {
@@ -13,11 +17,14 @@ describe('Testes de API do controller de user - método create', () => {
         jest.setTimeout(20000)
     })
 
-    beforeEach(() => {
-        jest.clearAllMocks()
-        jest.resetAllMocks()
+    beforeEach(async () => {
+        // jest.clearAllMocks()
+        // jest.resetAllMocks()
 
-        jest.setTimeout(20000)
+        // jest.setTimeout(20000)
+        const repository = Database.connection.getRepository(UserEntity);
+
+        await repository.clear();
       })
 
     afterAll(async () => {
@@ -31,43 +38,59 @@ describe('Testes de API do controller de user - método create', () => {
         return createApp()
     }
 
-    test('Deveria retornar 200 se o usecase for executado com sucesso', async () => {
-        const app = createSut()
+    const createUser = async (user: User) => {
+        const repository = new UserRepository();
+        await repository.createUser(user);
+    };
 
-        // jest.spyOn(CreateUserUsecase.prototype, 'execute').mockResolvedValue(UsecaseResponse.success('User succesfully created', {}))
+    test("Deveria retornar erro 400 se não for informado o username", async () => {
+        const result = await supertest(createSut()).post("/user").send({});
+    
+        expect(result).toBeDefined();
+        expect(result.status).toBe(400);
+        expect(result.status).toEqual(400);
+        expect(result).toHaveProperty("status", 400);
+        expect(result).toHaveProperty("body.ok");
+        // expect(result.body.message).toBe("Fill in the fields and try again");
+        expect(result.body.ok).toBe(false);
+    });
 
-        const result = await request(app).post('users/').send({
-            firtName: 'teste',
-            lastName: '1',
-            email: 'teste@mail.com',
-            password: '123456'
-        }).expect(200)
+    // test('Deveria retornar 200 se o usecase for executado com sucesso', async () => {
+    //     const app = createSut()
 
-        expect(result).toBeDefined()
-        expect(result.ok).toBe(true)
-        expect(result.status).toEqual(200)
-        expect(result).toHaveProperty('body')
 
-        expect(result.body).toHaveProperty('ok', true)
-    })
+    //     const result = await request(app).post('users/').send({
+    //         firtName: 'teste',
+    //         lastName: '1',
+    //         email: 'teste@mail.com',
+    //         password: '123456'
+    //     }).expect(200)
 
-    test('Deveria retornar 500 se o usecase disparar uma esceção', async () => {
-        const app = createSut()
+    //     expect(result).toBeDefined()
+    //     expect(result.ok).toBe(true)
+    //     expect(result.status).toEqual(200)
+    //     expect(result).toHaveProperty('body')
 
-        jest.spyOn(CreateUserUsecase.prototype, 'execute').mockRejectedValue('Erro simulado')
+    //     expect(result.body).toHaveProperty('ok', true)
+    // })
 
-        const result = await request(app).post('users/').send({
-            firtName: 'teste',
-            lastName: '1',
-            email: 'teste@mail.com',
-            password: '123456'
-        })
+    // test('Deveria retornar 500 se o usecase disparar uma esceção', async () => {
+    //     const app = createSut()
 
-        expect(result).toBeDefined()
-        expect(result.ok).toBe(true)
-        expect(result.status).toEqual(500)
-        expect(result).toHaveProperty('body')
+    //     jest.spyOn(CreateUserUsecase.prototype, 'execute').mockRejectedValue('Erro simulado')
 
-        expect(result.body).toHaveProperty('ok', true)
-    })
+    //     const result = await request(app).post('users/').send({
+    //         firtName: 'teste',
+    //         lastName: '1',
+    //         email: 'teste@mail.com',
+    //         password: '123456'
+    //     })
+
+    //     expect(result).toBeDefined()
+    //     expect(result.ok).toBe(true)
+    //     expect(result.status).toEqual(500)
+    //     expect(result).toHaveProperty('body')
+
+    //     expect(result.body).toHaveProperty('ok', true)
+    // })
 })

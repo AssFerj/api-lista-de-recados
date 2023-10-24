@@ -13,11 +13,18 @@ if (process.env.DB_ENV === 'production') {
 
 if(process.env.DB_ENV === 'test') {
     new DataSource({
+        // type: 'sqlite',
+        // database: 'db.sqlite3',
         type: 'postgres',
-        database: 'db.sqlite3',
+        url: process.env.DB_TEST_URL,
+        port: 5432,
+        ssl: {
+            rejectUnauthorized: false,
+        },
         synchronize: false,
         migrations: ["tests/app/shared/database/migrations/**/*.ts"],
-        entities: ["src/app/shared/database/entities/**/*.ts"]
+        entities: ["src/app/shared/database/entities/**/*.ts"],
+        schema: "lista-recados"
     });
 }
 
